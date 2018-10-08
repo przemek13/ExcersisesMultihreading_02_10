@@ -4,9 +4,9 @@ public class CouriersOperations {
     public static void main(String[] args) throws InterruptedException {
         Dispatcher dispatcher = new CourierDispatcher();
 
-        Courier courier1 = new ConcreteCourier(dispatcher, "Courier1");
-        Courier courier2 = new ConcreteCourier(dispatcher, "Courier2");
-        Courier courier3 = new ConcreteCourier (dispatcher, "Courier3");
+        ConcreteCourier courier1 = new ConcreteCourier(dispatcher, "Courier1");
+        ConcreteCourier courier2 = new ConcreteCourier(dispatcher, "Courier2");
+        ConcreteCourier courier3 = new ConcreteCourier (dispatcher, "Courier3");
 
         dispatcher.addCourier(courier1);
         dispatcher.addCourier(courier2);

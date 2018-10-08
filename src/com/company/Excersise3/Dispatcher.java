@@ -6,8 +6,6 @@ public interface Dispatcher {
 
     void sendCourier(String sendersDetails, String recipientsDetails);
 
-    void updateCourierStatus(Courier courier);
-
-    void addCourier(Courier courier);
+    void addCourier(ConcreteCourier courier);
 
 }

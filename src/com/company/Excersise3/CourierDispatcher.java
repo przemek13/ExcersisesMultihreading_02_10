@@ -5,7 +5,7 @@ import java.util.List;
 
 public class CourierDispatcher extends Thread implements Dispatcher {
 
-    private List<Courier> couriers;
+    private List<ConcreteCourier> couriers;
 
     public CourierDispatcher() {
         this.couriers = new ArrayList<>();
@@ -19,21 +19,15 @@ public class CourierDispatcher extends Thread implements Dispatcher {
 
     @Override
     public void sendCourier(String sendersDetails, String recipientsDetails) {
-        for (Courier courier : couriers) {
-            if (courier.courierStatus == CourierStatus.WAITING_FOR_FIRST_ORDER) {
+        for (ConcreteCourier courier : couriers) {
+            if (courier.getCourierStatus() == CourierStatus.WAITING_FOR_FIRST_ORDER) {
                 courier.realizeOrder(sendersDetails, recipientsDetails);
                 return;
             }
         }
     }
 
-    @Override
-    public void updateCourierStatus(Courier courier) {
-        System.out.println("Update courier status: " + courier);
-    }
-
-    @Override
-    public void addCourier(Courier courier) {
+    public void addCourier(ConcreteCourier courier) {
         couriers.add(courier);
     }
 }
