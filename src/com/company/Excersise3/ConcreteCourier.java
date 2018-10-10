@@ -1,8 +1,8 @@
 package com.company.Excersise3;
 
-public class ConcreteCourier extends Thread implements Courier {
+public class ConcreteCourier implements Courier, Runnable {
 
-    private Dispatcher dispatcher;
+    private final Dispatcher dispatcher;
     private String couriersName;
     private String sendersDetails;
     private String recipientsDetails;
@@ -19,16 +19,16 @@ public class ConcreteCourier extends Thread implements Courier {
     }
 
     @Override
-    public synchronized void realizeOrder(String sendersDetails, String recipientsDetails) {
+    public void realizeOrder(String sendersDetails, String recipientsDetails) {
         this.sendersDetails = sendersDetails;
         this.recipientsDetails= recipientsDetails;
-        this.courierStatus = CourierStatus.DURING_ORDER;
-        start();
-        notify();
+        courierStatus = CourierStatus.DURING_ORDER;
+        new Thread(this).start();
     }
 
     @Override
-    public synchronized void run() {
+    public void run() {
+        courierStatus = CourierStatus.DURING_ORDER;
         System.out.println(couriersName + " picks-up parcel at " + sendersDetails);
         try {
             Thread.sleep(2000);
@@ -37,6 +37,9 @@ public class ConcreteCourier extends Thread implements Courier {
         }
         System.out.println(couriersName + " leaves parcel at " + recipientsDetails);
         System.out.println();
-        this.courierStatus = CourierStatus.WAITING_FOR_ORDER;
+        courierStatus = CourierStatus.WAITING_FOR_ORDER;
+        synchronized (dispatcher) {
+            dispatcher.notify();
+        }
     }
 }
