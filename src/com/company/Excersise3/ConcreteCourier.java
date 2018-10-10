@@ -15,19 +15,20 @@ public class ConcreteCourier extends Thread implements Courier {
     public ConcreteCourier(Dispatcher dispatcher, String couriersName) {
         this.dispatcher = dispatcher;
         this.couriersName = couriersName;
-        courierStatus = CourierStatus.WAITING_FOR_FIRST_ORDER;
+        courierStatus = CourierStatus.WAITING_FOR_ORDER;
     }
 
     @Override
-    public void realizeOrder(String sendersDetails, String recipientsDetails) {
+    public synchronized void realizeOrder(String sendersDetails, String recipientsDetails) {
         this.sendersDetails = sendersDetails;
         this.recipientsDetails= recipientsDetails;
+        this.courierStatus = CourierStatus.DURING_ORDER;
         start();
+        notify();
     }
 
     @Override
-    public void run() {
-        courierStatus = CourierStatus.DURING_ORDER;
+    public synchronized void run() {
         System.out.println(couriersName + " picks-up parcel at " + sendersDetails);
         try {
             Thread.sleep(2000);
@@ -36,6 +37,6 @@ public class ConcreteCourier extends Thread implements Courier {
         }
         System.out.println(couriersName + " leaves parcel at " + recipientsDetails);
         System.out.println();
-        courierStatus = CourierStatus.WAITING_FOR_FIRST_ORDER;
+        this.courierStatus = CourierStatus.WAITING_FOR_ORDER;
     }
 }

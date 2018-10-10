@@ -12,18 +12,25 @@ public class CourierDispatcher extends Thread implements Dispatcher {
     }
 
     @Override
-    public void takeOrder(String sendersDetails, String recipientDetails) {
+    public synchronized void takeOrder(String sendersDetails, String recipientDetails) {
         System.out.println("Order from: " + sendersDetails + " to: " + recipientDetails + " accepted.");
         sendCourier(sendersDetails, recipientDetails);
     }
 
     @Override
-    public void sendCourier(String sendersDetails, String recipientsDetails) {
+    public synchronized void sendCourier(String sendersDetails, String recipientsDetails) {
         for (ConcreteCourier courier : couriers) {
-            if (courier.getCourierStatus() == CourierStatus.WAITING_FOR_FIRST_ORDER) {
+            if (courier.getCourierStatus() != CourierStatus.WAITING_FOR_ORDER) {
+                try {
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 courier.realizeOrder(sendersDetails, recipientsDetails);
                 return;
             }
+            else courier.realizeOrder(sendersDetails, recipientsDetails);
+            return;
         }
     }
 
