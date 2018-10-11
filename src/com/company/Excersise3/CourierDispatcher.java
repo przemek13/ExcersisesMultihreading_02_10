@@ -6,11 +6,20 @@ import java.util.List;
 public class CourierDispatcher extends Thread implements Dispatcher {
 
     private List<ConcreteCourier> couriers;
-    private List<ConcreteCourier> workingCouriers;
+    protected static List<ConcreteCourier> workingCouriers;
 
     public CourierDispatcher() {
         this.couriers = new ArrayList<>();
         this.workingCouriers = new ArrayList<>();
+    }
+
+    public static List<ConcreteCourier> getWorkingCouriers() {
+        return workingCouriers;
+    }
+
+
+    public static void setWorkingCouriers(List<ConcreteCourier> workingCouriers) {
+        CourierDispatcher.workingCouriers = workingCouriers;
     }
 
     @Override
@@ -31,8 +40,9 @@ public class CourierDispatcher extends Thread implements Dispatcher {
     public void sendCourier(String sendersDetails, String recipientsDetails) {
         for (ConcreteCourier courier : couriers) {
             if (courier.getCourierStatus() == CourierStatus.WAITING_FOR_ORDER) {
-                courier.realizeOrder(sendersDetails, recipientsDetails);
                 workingCouriers.add(courier);
+                courier.realizeOrder(sendersDetails, recipientsDetails);
+                System.out.println(workingCouriers);
                 return;
             }
         }

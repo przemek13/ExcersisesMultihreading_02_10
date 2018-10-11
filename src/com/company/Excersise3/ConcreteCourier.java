@@ -7,6 +7,7 @@ public class ConcreteCourier implements Courier, Runnable {
     private String sendersDetails;
     private String recipientsDetails;
     private CourierStatus courierStatus;
+    CourierDispatcher courierDispatcher;
 
     public CourierStatus getCourierStatus() {
         return courierStatus;
@@ -38,8 +39,18 @@ public class ConcreteCourier implements Courier, Runnable {
         System.out.println(couriersName + " leaves parcel at " + recipientsDetails);
         System.out.println();
         courierStatus = CourierStatus.WAITING_FOR_ORDER;
+        CourierDispatcher.workingCouriers.remove(this);
+        System.out.println(CourierDispatcher.workingCouriers);
         synchronized (dispatcher) {
             dispatcher.notify();
         }
+    }
+
+    @Override
+    public String toString() {
+        return "ConcreteCourier{" +
+                "couriersName='" + couriersName + '\'' +
+                "courierStatus=" + courierStatus +
+                '}';
     }
 }
